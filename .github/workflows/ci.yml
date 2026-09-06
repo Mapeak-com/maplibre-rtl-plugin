@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Lint, typecheck, test and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - run: npm run typecheck
+
+      - run: npm run test:coverage
+
+      - run: npm run build
+
+      - name: Check the generated Unicode tables are up to date with the committed ones
+        run: |
+          npm run generate-arabic-data
+          git diff --exit-code src/arabic_data.g.ts
+
+      - name: Report the bundle size
+        run: |
+          {
+            echo '| file | raw | gzipped |'
+            echo '| --- | --- | --- |'
+            for file in dist/maplibre-rtl-plugin.mjs dist/maplibre-rtl-plugin.js; do
+              raw=$(wc -c < "$file")
+              gz=$(gzip -9 -c "$file" | wc -c)
+              echo "| $file | $((raw / 1024)) kB | $((gz / 1024)) kB |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  conformance:
+    name: Conformance against @mapbox/mapbox-gl-rtl-text
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run test:conformance

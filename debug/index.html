@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>maplibre-rtl-plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/node_modules/maplibre-gl/dist/maplibre-gl.css">
+    <style>
+        body { margin: 0; font: 14px/1.4 system-ui, sans-serif; }
+        #map { position: absolute; inset: 0 0 0 0; }
+        #status { position: absolute; z-index: 1; margin: 10px; padding: 8px 12px; border-radius: 6px;
+                  background: rgba(255, 255, 255, 0.92); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+    </style>
+</head>
+<body>
+<div id="status">loading…</div>
+<div id="map"></div>
+<script type="module">
+    import {Map, importScriptInWorkers} from '/node_modules/maplibre-gl/dist/maplibre-gl.mjs';
+
+    const status = document.getElementById('status');
+
+    await importScriptInWorkers('/dist/maplibre-rtl-plugin.mjs');
+    status.textContent = 'plugin loaded into the workers';
+
+    const labels = [
+        ['مرحبا بالعالم', [-40, 20]],
+        ['شارع الملك فهد', [0, 20]],
+        ['اَلْعَرَبِيَّة', [40, 20]],
+        ['שלום עולם', [-40, -20]],
+        ['רחוב הרצל 12', [0, -20]],
+        ['hello مرحبا world', [40, -20]],
+    ];
+
+    new Map({
+        container: 'map',
+        zoom: 1.4,
+        center: [0, 0],
+        style: {
+            version: 8,
+            glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+            sources: {
+                places: {
+                    type: 'geojson',
+                    data: {
+                        type: 'FeatureCollection',
+                        features: labels.map(([name, coordinates]) => ({
+                            type: 'Feature',
+                            properties: {name},
+                            geometry: {type: 'Point', coordinates},
+                        })),
+                    },
+                },
+            },
+            layers: [
+                {id: 'background', type: 'background', paint: {'background-color': '#f6f4f0'}},
+                {
+                    id: 'labels',
+                    type: 'symbol',
+                    source: 'places',
+                    layout: {
+                        'text-field': ['get', 'name'],
+                        'text-font': ['Open Sans Regular'],
+                        'text-size': 22,
+                    },
+                    paint: {'text-color': '#222'},
+                },
+            ],
+        },
+    }).on('load', () => { status.textContent = 'map loaded — the labels above should read correctly'; });
+</script>
+</body>
+</html>

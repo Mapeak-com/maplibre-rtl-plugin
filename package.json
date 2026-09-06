@@ -1,0 +1,81 @@
+{
+  "name": "maplibre-rtl-plugin",
+  "version": "0.1.0",
+  "description": "A small right-to-left text plugin for MapLibre GL JS: Arabic shaping and the Unicode bidirectional algorithm, in JavaScript rather than compiled ICU.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Mapeak.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mapeak-com/maplibre-rtl-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mapeak-com/maplibre-rtl-plugin/issues"
+  },
+  "homepage": "https://github.com/Mapeak-com/maplibre-rtl-plugin#readme",
+  "keywords": [
+    "maplibre",
+    "maplibre-gl-js",
+    "rtl",
+    "bidi",
+    "arabic",
+    "hebrew",
+    "text",
+    "shaping"
+  ],
+  "main": "./dist/maplibre-rtl-plugin.mjs",
+  "module": "./dist/maplibre-rtl-plugin.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/maplibre-rtl-plugin.mjs"
+    },
+    "./plugin": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "./dist/maplibre-rtl-plugin.mjs"
+  ],
+  "scripts": {
+    "build": "node --experimental-strip-types build/build.ts && npm run build:types",
+    "build:types": "tsc -p tsconfig.build.json",
+    "generate-arabic-data": "node --experimental-strip-types build/generate-arabic-data.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "start": "npm run build && vite",
+    "prepack": "npm run build",
+    "test:conformance": "vitest run --config vitest.conformance.config.ts"
+  },
+  "dependencies": {
+    "bidi-js": "^1.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@types/node": "^24.13.3",
+    "@vitest/coverage-v8": "^4.1.11",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.39.0",
+    "maplibre-gl": "^6.7.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.46.0",
+    "vite": "^7.0.0",
+    "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
