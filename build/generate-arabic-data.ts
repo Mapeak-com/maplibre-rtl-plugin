@@ -4,8 +4,8 @@
  * Run with `npm run generate-arabic-data` whenever the pinned UCD version moves. The generated
  * file is committed so that neither the build nor the tests need network access.
  */
-import {writeFileSync} from 'fs';
-import {join} from 'path';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 
 /** The UCD release the committed tables were generated from. */
 const UCD_VERSION = '17.0.0';
@@ -95,18 +95,18 @@ async function readPresentationForms(): Promise<{
         const base = carried ? bases[1] : bases[0];
 
         if (bases.length === 1 || carried) {
-            const existing = forms.get(base) ?? {isolated: 0, final: 0, initial: 0, medial: 0};
+            const existing = forms.get(base) ?? { isolated: 0, final: 0, initial: 0, medial: 0 };
             existing[shape] = codePoint;
             forms.set(base, existing);
         } else if (bases.length === 2 && codePoint >= 0xfef5 && codePoint <= 0xfefc) {
             const key = String.fromCodePoint(...bases);
-            const existing = ligatures.get(key) ?? {isolated: 0, final: 0};
+            const existing = ligatures.get(key) ?? { isolated: 0, final: 0 };
             existing[shape] = codePoint;
             ligatures.set(key, existing);
         }
     }
 
-    return {forms, ligatures};
+    return { forms, ligatures };
 }
 
 /**
@@ -142,7 +142,7 @@ function encodeRanges(ranges: number[][]): string {
 
 async function main(): Promise<void> {
     const joiningTypes = await readJoiningTypes();
-    const {forms, ligatures} = await readPresentationForms();
+    const { forms, ligatures } = await readPresentationForms();
 
     const byType = new Map<JoiningType, number[]>();
     for (const [codePoint, type] of joiningTypes) {
@@ -157,13 +157,13 @@ async function main(): Promise<void> {
 
     const encodedForms = [...forms]
         .sort(([a], [b]) => a - b)
-        .map(([base, {isolated, final, initial, medial}]) =>
+        .map(([base, { isolated, final, initial, medial }]) =>
             `    ${base}: [${isolated}, ${final}, ${initial}, ${medial}],`)
         .join('\n');
 
     const encodedLigatures = [...ligatures]
         .sort(([a], [b]) => a.localeCompare(b))
-        .map(([pair, {isolated, final}]) => {
+        .map(([pair, { isolated, final }]) => {
             const escaped = [...pair].map(c => `\\u${c.codePointAt(0).toString(16).padStart(4, '0')}`).join('');
             return `    '${escaped}': [${isolated}, ${final}],`;
         })

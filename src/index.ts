@@ -1,5 +1,5 @@
 import { plugin } from './plugin.ts';
-import type { WorkerGlobalScopeInterface } from 'maplibre-gl'
+import type { WorkerGlobalScopeInterface } from 'maplibre-gl';
 
 const workerScope = globalThis as unknown as WorkerGlobalScopeInterface;
 

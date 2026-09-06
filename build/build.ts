@@ -5,13 +5,13 @@
  * no `unsafe-eval` in the worker's content security policy. `maplibre-rtl-plugin.js` is the same
  * code as a classic script, for setups that cannot serve modules.
  */
-import {build} from 'esbuild';
-import {readFileSync, writeFileSync} from 'fs';
-import {join} from 'path';
-import {gzipSync} from 'zlib';
+import { build } from 'esbuild';
+import { readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
+import { gzipSync } from 'zlib';
 
 const root = join(import.meta.dirname, '..');
-const {version} = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+const { version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 
 const banner = `/* maplibre-rtl-plugin ${version} | MIT | https://github.com/Mapeak-com/maplibre-rtl-plugin */`;
 
@@ -19,7 +19,7 @@ const shared = {
     bundle: true,
     minify: true,
     target: 'es2022',
-    banner: {js: banner},
+    banner: { js: banner },
     logLevel: 'info',
 } as const;
 
@@ -46,7 +46,7 @@ await build({
 
 for (const name of ['maplibre-rtl-plugin.mjs', 'maplibre-rtl-plugin.js', 'plugin.mjs']) {
     const contents = readFileSync(join(root, 'dist', name));
-    const gzipped = gzipSync(contents, {level: 9}).length;
+    const gzipped = gzipSync(contents, { level: 9 }).length;
     console.log(`${name}: ${(contents.length / 1024).toFixed(1)} kB, ${(gzipped / 1024).toFixed(1)} kB gzipped`);
 }
 

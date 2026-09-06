@@ -13,7 +13,7 @@ export default tseslint.config(
             'comma-dangle': ['error', 'only-multiline'],
             'eol-last': 'error',
             'no-trailing-spaces': 'error',
-            'object-curly-spacing': ['error', 'never'],
+            'object-curly-spacing': ['error', 'always'],
             'prefer-const': 'error',
             '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
