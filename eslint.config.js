@@ -1,10 +1,11 @@
 import js from '@eslint/js';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-    { ignores: ['dist/', 'coverage/', 'src/*.g.ts'] },
+export default defineConfig(
+    globalIgnores(['dist/', 'coverage/', 'src/*.g.ts']),
     js.configs.recommended,
-    ...tseslint.configs.recommended,
+    tseslint.configs.recommended,
     {
         rules: {
             'indent': ['error', 4, { SwitchCase: 1 }],

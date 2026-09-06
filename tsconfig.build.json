@@ -6,7 +6,8 @@
     "declaration": true,
     "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": "src"
   },
   "include": [
     "src"
