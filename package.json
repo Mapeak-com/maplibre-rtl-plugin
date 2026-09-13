@@ -57,7 +57,7 @@
     "test:conformance": "vitest run --config vitest.conformance.config.ts"
   },
   "dependencies": {
-    "bidi-js": "^1.0.3"
+    "bidi-js": "^1.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
